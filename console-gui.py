@@ -3,8 +3,7 @@ from async_backend import AsyncBackend
 import sys
 from time import time
 
-backend = "cmd.exe"
-#backend = "py D:/Stepan/mirea/cc/main.py"
+backend = "py console.py"
 
 theme = {
     "background": "#222222",
@@ -82,6 +81,7 @@ try:
         update_icon()
         window.update()
     window.destroy()
-#except: pass
+except tk._tkinter.TclError:
+    pass
 finally:
     back.stop()

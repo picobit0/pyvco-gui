@@ -10,7 +10,8 @@ def run (line):
         return
 
     args = [*map(parse_arg, args)]
-    
+    if None in args:
+        return
     cmds[cmd](*args)
 
 def parse_arg (arg):
