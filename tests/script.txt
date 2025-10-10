@@ -1,0 +1,4 @@
+ls 123 abcd
+cd $appdata
+cd $err
+print

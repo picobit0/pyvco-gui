@@ -1,0 +1,1 @@
+pyw ../console-gui.py
