@@ -18,10 +18,16 @@ def pause ():
     print("Press enter to continue")
     input()
 
-def run (line):
+def parse_cmd_line (line):
     line = line.split()
-    if not line: return
+    if not line: return None, None
     cmd, *args = line
+    if cmd.startswith("$"):
+        env = os.getenv(cmd[1:])
+        if env: cmd = env
+    return cmd, args
+
+def run (cmd, args):
     if not cmd in cmds:
         print(f"Unknown command: " + cmd)
         return
@@ -51,20 +57,25 @@ if __name__ == "__main__":
             path = argv.script 
             sys.stdin = open(path)
             runsScript = True
-        while True:
-            try:
-                inp = input(">>> ")
-                if runsScript: print(inp)
-                run(inp)
-            except EOFError:
-                runsScript = False
-                sys.stdin = defaultStdin
-                inp = input()
-                run(inp)
     except ArgumentError as err:
         print(err)
         pause()
+        exit()
     except FileNotFoundError:
         print("Can't access file:", path)
         pause()
-    exit()
+        exit()
+    while True:
+        try:
+            if runsScript:
+                inp = input()
+                cmd, args = parse_cmd_line(inp)
+                if not cmd in cmds:
+                    continue
+                print(">>> " + inp)
+            else:
+                cmd, args = parse_cmd_line(input(">>> "))
+            run(cmd, args)
+        except EOFError:
+            runsScript = False
+            sys.stdin = defaultStdin
